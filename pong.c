@@ -1,3 +1,4 @@
+
 #include <raylib.h>
 
 // Fucntion to find the exact center of the screen
@@ -9,9 +10,18 @@ void enableCenter() {
 // Function to draw up a divider
 void drawDivider(int screenWidth, int screenHeight) {
   int thickness = 2;
-  DrawRectangle(screenWidth / 2 - thickness / 2, 0, thickness, screenHeight,DARKGRAY);
+  DrawRectangle((screenWidth / 2 ) - (thickness / 2), 0, thickness, screenHeight,DARKGRAY);  
 }
 
+// Function to draw score
+void drawScore(){
+    int player_1_Score, player_2_Score = 0;
+    int fontSize = 42;
+    int xPosition =  GetScreenWidth()/2 - fontSize/4, yPosition = 40;
+    DrawText(TextFormat("%i",player_1_Score), xPosition + GetScreenWidth()/4, yPosition, fontSize, LIGHTGRAY);
+    DrawText(TextFormat("%i", player_2_Score), xPosition - GetScreenWidth()/4, yPosition, fontSize, GRAY);
+}
+ 
 int main(){
 
     // - - - Variables
@@ -34,6 +44,12 @@ int main(){
 
     Rectangle ball = {(float)windowWidth/2 - ballWidth/2,(float)windowHeight/2 - ballHeight/2,ballWidth,ballHeight};
 
+    // UI
+    float boundingBoxThickness = 4;
+    Rectangle boundingBox = {10,10,windowWidth-20,windowHeight-20};
+
+
+
     // - - - Global Settings
     InitWindow(windowWidth,windowHeight,"Pong");
     SetTargetFPS(30);
@@ -44,10 +60,14 @@ int main(){
         ClearBackground(BLACK);
 
         // Drawing
+        drawScore(); // Draw Score to the screen
         drawDivider(windowWidth,windowHeight); // draw divider
+                                               //
         DrawRectangleRec(player1Paddle, LIGHTGRAY); // draw left paddle
         DrawRectangleRec(player2Paddle, GRAY); // draw right paddle
         DrawRectangleRec(ball, RED); // draw ball
+                                     //
+        DrawRectangleLinesEx(boundingBox, boundingBoxThickness, DARKGRAY);// draw bounding box
   
         // Controls
         if(IsKeyDown(KEY_W)){
@@ -63,11 +83,17 @@ int main(){
           player2Paddle.y =  paddle2_Y += paddleSpeed;
         }
 
-        //enableCenter();
 
+
+        //enableCenter();
+    
+        
+
+        
         EndDrawing();
     }
     CloseWindow();
 
     return 0;
 }
+

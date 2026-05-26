@@ -1,5 +1,6 @@
 
 #include <raylib.h>
+#include <stdio.h>
 
 // Fucntion to find the exact center of the screen
 void enableCenter() {
@@ -37,6 +38,7 @@ int main(){
     float ballHeight = 10.0, ballWidth = 10.0;
 
 
+
     // - - - Objects (x,y,w,h)
     Rectangle player1Paddle = {paddle1_X, paddle1_Y, paddleWidth, paddleHeight};
 
@@ -48,27 +50,33 @@ int main(){
     float boundingBoxThickness = 4;
     Rectangle boundingBox = {10,10,windowWidth-20,windowHeight-20};
 
-
-
     // - - - Global Settings
     InitWindow(windowWidth,windowHeight,"Pong");
     SetTargetFPS(30);
 
     // - - - Main game loop
     while(!WindowShouldClose()){
-        BeginDrawing();
-        ClearBackground(BLACK);
 
-        // Drawing
-        drawScore(); // Draw Score to the screen
-        drawDivider(windowWidth,windowHeight); // draw divider
-                                               //
-        DrawRectangleRec(player1Paddle, LIGHTGRAY); // draw left paddle
-        DrawRectangleRec(player2Paddle, GRAY); // draw right paddle
-        DrawRectangleRec(ball, RED); // draw ball
-                                     //
-        DrawRectangleLinesEx(boundingBox, boundingBoxThickness, DARKGRAY);// draw bounding box
-  
+        // Limits
+         if(player1Paddle.y >= windowHeight ){
+            paddle1_Y = windowHeight - paddleHeight;
+        }
+
+        printf("\n\n\n%f\n\n\n",player1Paddle.y);
+       
+        if(player1Paddle.y < 0){
+            paddle1_Y = 0;
+        }
+
+        if(player2Paddle.y > windowHeight ){
+            paddle2_Y = windowHeight - player2Paddle.height;
+        }
+       
+        if(player2Paddle.y < 0){
+            paddle2_Y = 0;
+        }
+
+
         // Controls
         if(IsKeyDown(KEY_W)){
            player1Paddle.y = paddle1_Y -= paddleSpeed;
@@ -83,11 +91,22 @@ int main(){
           player2Paddle.y =  paddle2_Y += paddleSpeed;
         }
 
-
-
         //enableCenter();
     
-        
+    
+        // - - - Drawing
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        drawScore(); // Draw Score to the screen
+        drawDivider(windowWidth,windowHeight); // draw divider
+                                               //
+        DrawRectangleRec(player1Paddle, LIGHTGRAY); // draw left paddle
+        DrawRectangleRec(player2Paddle, GRAY); // draw right paddle
+        DrawRectangleRec(ball, RED); // draw ball
+                                     //
+        DrawRectangleLinesEx(boundingBox, boundingBoxThickness, DARKGRAY);// draw bounding box
+  
 
         
         EndDrawing();

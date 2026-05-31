@@ -36,7 +36,8 @@ int main(){
 
     // Ball
     float ballHeight = 10.0, ballWidth = 10.0;
-
+    float ballVelocity_X, ballVelocity_Y = 150.0;
+    int isBallActive = 0;
 
 
     // - - - Objects (x,y,w,h)
@@ -46,23 +47,28 @@ int main(){
 
     Rectangle ball = {(float)windowWidth/2 - ballWidth/2,(float)windowHeight/2 - ballHeight/2,ballWidth,ballHeight};
 
-    // UI
+
+    // - - - UI
     float boundingBoxThickness = 4;
     Rectangle boundingBox = {10,10,windowWidth-20,windowHeight-20};
+
 
     // - - - Global Settings
     InitWindow(windowWidth,windowHeight,"Pong");
     SetTargetFPS(30);
 
+
     // - - - Main game loop
     while(!WindowShouldClose()){
 
-        // Limits
+    float dt = GetFrameTime();
+
+        // + + Limits
+
          if(player1Paddle.y >= windowHeight ){
             paddle1_Y = windowHeight - paddleHeight;
         }
 
-        printf("\n\n\n%f\n\n\n",player1Paddle.y);
        
         if(player1Paddle.y < 0){
             paddle1_Y = 0;
@@ -71,13 +77,17 @@ int main(){
         if(player2Paddle.y > windowHeight ){
             paddle2_Y = windowHeight - player2Paddle.height;
         }
-       
+        
         if(player2Paddle.y < 0){
             paddle2_Y = 0;
         }
 
+        if(ball.y - ballHeight <= 0 || ballHeight + ball.y >= windowHeight ){
+            ballVelocity_Y *=-1;
+        }
 
-        // Controls
+
+        // + + Controls
         if(IsKeyDown(KEY_W)){
            player1Paddle.y = paddle1_Y -= paddleSpeed;
         }
@@ -91,24 +101,31 @@ int main(){
           player2Paddle.y =  paddle2_Y += paddleSpeed;
         }
 
+
+        if(IsKeyPressed(KEY_SPACE)){
+            isBallActive = 1; 
+        }
+        if(isBallActive==1){
+            ball.x -= ballVelocity_X * dt;
+            ball.y -= ballVelocity_Y * dt;
+        }
+
         //enableCenter();
     
     
         // - - - Drawing
         BeginDrawing();
-        ClearBackground(BLACK);
+          ClearBackground(BLACK);
 
-        drawScore(); // Draw Score to the screen
-        drawDivider(windowWidth,windowHeight); // draw divider
-                                               //
-        DrawRectangleRec(player1Paddle, LIGHTGRAY); // draw left paddle
-        DrawRectangleRec(player2Paddle, GRAY); // draw right paddle
-        DrawRectangleRec(ball, RED); // draw ball
-                                     //
-        DrawRectangleLinesEx(boundingBox, boundingBoxThickness, DARKGRAY);// draw bounding box
+          drawScore(); // Draw Score to the screen
+          drawDivider(windowWidth,windowHeight); // draw divider
+                                               
+          DrawRectangleRec(player1Paddle, LIGHTGRAY); // draw left paddle
+          DrawRectangleRec(player2Paddle, GRAY); // draw right paddle
+          DrawRectangleRec(ball, RED); // draw ball
+                                       
+          DrawRectangleLinesEx(boundingBox, boundingBoxThickness, DARKGRAY);// draw bounding box
   
-
-        
         EndDrawing();
     }
     CloseWindow();

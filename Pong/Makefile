@@ -1,5 +1,5 @@
 input = pong.c
-output = pong
+output = game
 
 all:
 	gcc $(input) -lraylib -o $(output)

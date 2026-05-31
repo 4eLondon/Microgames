@@ -22,6 +22,7 @@ void drawScore(){
     DrawText(TextFormat("%i",player_1_Score), xPosition + GetScreenWidth()/4, yPosition, fontSize, LIGHTGRAY);
     DrawText(TextFormat("%i", player_2_Score), xPosition - GetScreenWidth()/4, yPosition, fontSize, GRAY);
 }
+
  
 int main(){
 
@@ -36,7 +37,7 @@ int main(){
 
     // Ball
     float ballHeight = 10.0, ballWidth = 10.0;
-    float ballVelocity_X, ballVelocity_Y = 150.0;
+    float ballVelocity_X = 100.0, ballVelocity_Y = 150.0;
     int isBallActive = 0;
 
 
@@ -77,15 +78,24 @@ int main(){
         if(player2Paddle.y > windowHeight ){
             paddle2_Y = windowHeight - player2Paddle.height;
         }
+
         
-        if(player2Paddle.y < 0){
-            paddle2_Y = 0;
+        // Ball reset
+        if(ball.x <= -20 || ball.x >= windowWidth){
+            ball.x = (float)windowWidth/2;
+            ball.y = (float)windowHeight/2;
+            isBallActive = 0;
         }
 
+        // Ball bounce
         if(ball.y - ballHeight <= 0 || ballHeight + ball.y >= windowHeight ){
             ballVelocity_Y *=-1;
         }
 
+        // Paddle bounce
+        if(CheckCollisionRecs(ball, player1Paddle) || CheckCollisionRecs(ball, player2Paddle)){
+            ballVelocity_X *=-1;
+        }
 
         // + + Controls
         if(IsKeyDown(KEY_W)){
